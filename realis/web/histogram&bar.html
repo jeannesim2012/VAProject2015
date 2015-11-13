@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Filtering Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+</head>
+<body>
+
+<div id="chart-hist-unitPrice"></div>
+<div id="chart-row-spenders"></div>
+
+<script type="text/javascript" src="lib/d3/d3.js"></script>
+<script type="text/javascript" src="lib/crossfilter/crossfilter.js"></script>
+<script type="text/javascript" src="lib/dc/dc.js"></script>
+<script type="text/javascript">
+
+var unitPriceHistChart  = dc.barChart("#chart-hist-unitPrice"),
+    spenderRowChart = dc.rowChart("#chart-row-spenders");
+
+//var chart = spenderRowChart = dc.rowChart("#test");
+var parseDate = d3.time.format("%d-%b-%y").parse;
+
+  // d3.csv('./data/sample.csv', function(transactions) {
+  d3.csv('data/REALIS2015.csv', function(transactions) {
+    //Basic Transform
+    transactions.forEach(function(d, i) {
+      d.index = i;
+      d.date = parseDate(d.saleDate);
+      d.area = parseInt(d.area, 10);
+      d.unitSold = parseInt(d.unitSold, 10);
+      d.transactedPrice = parseInt(d.transactedPrice, 10);
+      d.unitPricePSM = parseInt(d.unitPricePSM, 10);
+    });
+
+    transaction = crossfilter(transactions);
+     
+    // all = transaction.groupAll();
+    date = transaction.dimension(function(d) {
+      return d3.time.month(d.date);
+    });
+
+    dates = date.group();
+    
+    unitPricePSMDim = transaction.dimension(function(d) {
+      return (d.unitPricePSM);
+    });
+    
+    unitPriceHist    = unitPricePSMDim.group().reduceCount(function(d) { 
+      return d.unitPricePSM;
+    });
+    
+    projectName = transaction.dimension(function(d) {
+      return d.projectName;
+    });
+
+    projectNames = projectName.group();
+
+    planningArea = transaction.dimension(function(d) {
+      return d.planningArea;
+    });
+
+    planningRegion = transaction.dimension(function(d) {
+      return d.planningRegion;
+    });
+
+    typeOfSale = transaction.dimension(function(d) {
+      return d.typeOfSale;
+    });
+
+    unitSoldPerRegion = planningRegion.group().reduceSum(function(d) {
+      return +d.unitSold;
+    });
+
+    //console.log(transactions)
+         
+spenderRowChart
+    .width(500).height(200)
+    .dimension(planningRegion)
+    .group(unitSoldPerRegion)
+    .elasticX(true);
+
+unitPriceHistChart
+    .width(400)
+    .height(200)
+    .dimension(unitPricePSMDim)
+    .group(unitPriceHist)
+    .gap(1)
+    .x(d3.scale.linear().domain([1500,40000]))
+    .elasticY(true);
+
+unitPriceHistChart.xAxis().tickFormat(function(d) {return d}); // convert back to base unit
+unitPriceHistChart.yAxis().ticks(2);
+
+dc.renderAll();
+});
+
+</script>
+
+</body>
+</html>
