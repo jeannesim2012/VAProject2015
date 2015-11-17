@@ -12,7 +12,7 @@
         <div id="chart-line"></div>
         <div id="monthly-volume-chart"></div>
         <a href='javascript:dc.filterAll(); dc.renderAll();'>Reset All</a>
-        
+
         <script type="text/javascript" src="lib/d3/d3.js"></script>
         <script type="text/javascript" src="lib/crossfilter/crossfilter.js"></script>
         <script type="text/javascript" src="lib/dc/dc.js"></script>
@@ -23,7 +23,6 @@
                     priceLineChart = dc.lineChart("#chart-line"),
                     volumeChart = dc.barChart('#monthly-volume-chart');
 
-            //var chart = spenderRowChart = dc.rowChart("#test");
             var parseDate = d3.time.format("%d-%b-%y").parse;
 
             // d3.csv('./data/sample.csv', function(transactions) {
@@ -39,13 +38,11 @@
                 });
 
                 transaction = crossfilter(transactions);
-
+                
                 // all = transaction.groupAll();
                 date = transaction.dimension(function (d) {
-                    return d3.time.month(d.date);
+                    return d3.time.day(d.date);
                 });
-
-                dates = date.group();
 
                 transactedPriceDim = transaction.dimension(function (d) {
                     return (Math.log(d.transactedPrice));
@@ -81,24 +78,9 @@
                     return +d.unitSold;
                 });
 
-                indexAvgByMonthGroup = date.group().reduce(
-                        function (p, v) {
-                            ++p.days;
-                            p.total += (v.open + v.close) / 2;
-                            p.avg = Math.round(p.total / p.days);
-                            return p;
-                        },
-                        function (p, v) {
-                            --p.days;
-                            p.total -= (v.open + v.close) / 2;
-                            p.avg = p.days ? Math.round(p.total / p.days) : 0;
-                            return p;
-                        },
-                        function () {
-                            return {days: 0, total: 0, avg: 0};
-                        }
-                );
-                //console.log(transactions)
+                logTransactionPriceByMonthGroup = date.group().reduceSum(function (d) {
+                    return +Math.log(d.transactedPrice);
+                });
 
                 spenderRowChart
                         .width(500).height(200)
@@ -126,22 +108,25 @@
                         // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
                         .rangeChart(volumeChart)
                         .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 12, 31)]))
-                        .round(d3.time.month.round)
-                        .xUnits(d3.time.months)
+                        .round(d3.time.day.round)
+                        .xUnits(d3.time.days)
                         .elasticY(true)
                         .renderHorizontalGridLines(true)
                         //##### Legend
-
                         // Position the legend relative to the chart origin and specify items' height and separation.
                         .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
                         .brushOn(false)
-                        // Add the base layer of the stack with group. The second parameter specifies a series name for use in the
-                        // legend.
+// Add the base layer of the stack with group. The second parameter specifies a series name for use in the legend.
                         // The `.valueAccessor` will be used for the base layer
-                        .group(indexAvgByMonthGroup, 'Property Type')
+                        .group(logTransactionPriceByMonthGroup, 'Property Type')
                         .valueAccessor(function (d) {
                             return d.value.avg;
                         })
+                        // Stack additional layers with `.stack`. The first paramenter is a new group.
+                        // The second parameter is the series name. The third is a value accessor.
+                        /*.stack(monthlyMoveGroup, 'Monthly Index Move', function (d) {
+                            return d.value;
+                        })*/
                         // Title can be called by any stack layer.
                         .title(function (d) {
                             var value = d.value.avg ? d.value.avg : d.value;
@@ -156,13 +141,13 @@
                         .height(40)
                         .margins({top: 0, right: 50, bottom: 20, left: 40})
                         .dimension(date)
-                        .group(indexAvgByMonthGroup)
+                        .group(logTransactionPriceByMonthGroup)
                         .centerBar(true)
-                        .gap(1)
+                        .gap(0.5)
                         .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 12, 31)]))
-                        .round(d3.time.month.round)
+                        .round(d3.time.day.round)
                         .alwaysUseRounding(true)
-                        .xUnits(d3.time.months);
+                        .xUnits(d3.time.days);
 
                 unitPriceHistChart.xAxis().tickFormat(function (d) {
                     return d
