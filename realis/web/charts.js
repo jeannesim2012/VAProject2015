@@ -1,9 +1,11 @@
 var unitPriceHistChart = dc.barChart("#chart-hist-unitPrice"),
         priceLineChart = dc.lineChart("#chart-line"),
         volumeChart = dc.barChart('#monthly-volume-chart'),
-        propertyRowChart = dc.rowChart("#chart-row-propertyType");
+        propertyRowChart = dc.rowChart("#chart-row-propertyType"),
+        nasdaqTable = dc.dataTable(".dc-data-table");
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
+var parseDateTable = d3.time.format("%d-%b-%y");
 var dtgFormat2 = d3.time.format("%a %e %b");
 
 // d3.csv('./data/sample.csv', function(transactions) {
@@ -85,7 +87,6 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .brushOn(false)
             .group(apartmentValues)
             .valueAccessor(function (d) {
-                console.log(d.value);
                 return d.value;
             })
             .title(function (d) {
@@ -111,5 +112,55 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     }); // convert back to base unit
     unitPriceHistChart.yAxis().ticks(2);
 
+    nasdaqTable /* dc.dataTable('.dc-data-table', 'chartGroup') */
+            .dimension(date)
+            .group(function (d) {
+                return "";
+            })
+            // (_optional_) max number of records to be shown, `default = 25`
+            .size(10)
+            // There are several ways to specify the columns; see the data-table documentation.
+            // This code demonstrates generating the column header automatically based on the columns.
+            .columns([
+                function (d) {
+                    return  d.projectName;
+                }, function (d) {
+                    return  d.address;
+                }, function (d) {
+                    return  d.area;
+                }, function (d) {
+                    return d.typeOfArea;
+                }, function (d) {
+                    return  "$" + d.transactedPrice;
+                }, function (d) {
+                    return  "$" + d.unitPricePSM;
+                }, function (d) {
+                    return  "$" + d.unitPricePSF;
+                }, function (d) {
+                    return d.saleDate;
+                }, function (d) {
+                    return d.propertyType;
+                }, function (d) {
+                    return d.tenure;
+                }, function (d) {
+                    return d.postalDistrict;
+                }, function (d) {
+                    return d.postalCode;
+                }, function (d) {
+                    return d.planningRegion;
+                }, function (d) {
+                    return d.planningArea;
+                }
+            ])
+            // (_optional_) sort using the given field, `default = function(d){return d;}`
+            .sortBy(function (d) {
+                return d.dd;
+            })
+            // (_optional_) sort order, `default = d3.ascending`
+            .order(d3.ascending)
+            // (_optional_) custom renderlet to post-process chart using [D3](http://d3js.org)
+            .on('renderlet', function (table) {
+                table.selectAll('.dc-table-group').classed('info', true);
+            });
     dc.renderAll();
 });

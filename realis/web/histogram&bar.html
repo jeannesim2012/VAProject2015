@@ -4,10 +4,15 @@
         <title>IS428 Visual Analytics Project on REALIS 2014 data</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+        <link rel="stylesheet" type="text/css" href="/DataTables/datatables.css">
 
         <style>
             #monthly-volume-chart g.y {
                 display: none;
+            }
+
+            #chart-row-propertyType g.row text {
+                fill: grey;
             }
         </style>
     </head>
@@ -19,9 +24,36 @@
         <div id="monthly-volume-chart"></div>
         <!--<a href='javascript:dc.filterAll(); dc.renderAll();'>Reset All</a>-->
 
+        <div class='container' style='font: 12px sans-serif;'>
+            <div class='row'>
+                <div class='span12'>
+                    <table class='table table-hover dc-data-table' id='data-table'>
+                        <thead>
+                            <tr class='header'>
+                                <th>Project Name</th>
+                                <th>Address</th>
+                                <th>Area</th>
+                                <th>Type Of Area</th>
+                                <th>Transacted Price ($)</th>
+                                <th>Unit Price/PSM ($)</th>
+                                <th>Unit Price/PSF ($)</th>
+                                <th>Sale Date</th>
+                                <th>Property Type</th>
+                                <th>Tenure</th>
+                                <th>Postal District</th>
+                                <th>Postal Code</th>
+                                <th>Planning Region</th>
+                                <th>Planning Area</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
         <script type="text/javascript" src="lib/d3/d3.js"></script>
         <script type="text/javascript" src="lib/crossfilter/crossfilter.js"></script>
         <script type="text/javascript" src="lib/dc/dc.js"></script>
+        <script type="text/javascript" src="lib/dataTables/datatables.js"></script>
         <script type="text/javascript" src="charts.js"></script>
 
     </body>
