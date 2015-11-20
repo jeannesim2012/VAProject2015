@@ -2,13 +2,12 @@ var unitPriceHistChart = dc.barChart("#chart-hist-unitPrice"),
         priceLineChart = dc.lineChart("#chart-line"),
         volumeChart = dc.barChart('#monthly-volume-chart'),
         propertyRowChart = dc.rowChart("#chart-row-propertyType"),
-        nasdaqTable = dc.dataTable(".dc-data-table");
+        nasdaqTable = dc.dataTable(".dc-data-table"),
+        nasdaqCount = dc.dataCount('.dc-data-count');
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
-var parseDateTable = d3.time.format("%d-%b-%y");
 var dtgFormat2 = d3.time.format("%a %e %b");
 
-// d3.csv('./data/sample.csv', function(transactions) {
 d3.csv('data/REALIS2014.csv', function (transactions) {
     //Basic Transform
     transactions.forEach(function (d, i) {
@@ -21,8 +20,8 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     });
 
     transaction = crossfilter(transactions);
+    all = transaction.groupAll();
 
-    // all = transaction.groupAll();
     date = transaction.dimension(function (d) {
         return d3.time.day(d.date);
     });
@@ -112,15 +111,25 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     }); // convert back to base unit
     unitPriceHistChart.yAxis().ticks(2);
 
+    nasdaqCount /* dc.dataCount('.dc-data-count', 'chartGroup'); */
+            .dimension(transaction)
+            .group(all)
+            // (_optional_) `.html` sets different html when some records or all records are selected.
+            // `.html` replaces everything in the anchor with the html given using the following function.
+            // `%filter-count` and `%total-count` are replaced with the values obtained.
+            .html({
+                some: '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
+                        ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'>Reset All</a>',
+                all: 'All records selected. Please click on the graph to apply filters.'
+            });
+
+
     nasdaqTable /* dc.dataTable('.dc-data-table', 'chartGroup') */
             .dimension(date)
             .group(function (d) {
                 return "";
             })
-            // (_optional_) max number of records to be shown, `default = 25`
             .size(10)
-            // There are several ways to specify the columns; see the data-table documentation.
-            // This code demonstrates generating the column header automatically based on the columns.
             .columns([
                 function (d) {
                     return  d.projectName;
@@ -152,13 +161,10 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                     return d.planningArea;
                 }
             ])
-            // (_optional_) sort using the given field, `default = function(d){return d;}`
             .sortBy(function (d) {
                 return d.dd;
             })
-            // (_optional_) sort order, `default = d3.ascending`
             .order(d3.ascending)
-            // (_optional_) custom renderlet to post-process chart using [D3](http://d3js.org)
             .on('renderlet', function (table) {
                 table.selectAll('.dc-table-group').classed('info', true);
             });
