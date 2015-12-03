@@ -4,19 +4,33 @@
         <title>IS428 Visual Analytics Project on REALIS 2014 data</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="css/dc.css"/>
-
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        
         <style>
             #monthly-volume-chart g.y {
                 display: none;
             }
 
             #chart-row-propertyType g.row text {
-                fill: grey;
+                fill: black;
+            }
+
+            #sunburst g.dc-legend {
+                display: none;
+            }
+
+            .dc-chart .pie-slice {
+                fill: black;
             }
         </style>
     </head>
     <body>
-
+        <div class="btn-group">
+            <button class="btn">Left</button>
+            <button class="btn">Middle</button>
+            <button class="btn">Right</button>
+        </div>
+        <div id="sunburst"></div>
         <div id="chart-hist-unitPrice"></div>
         <div id="chart-row-propertyType"></div>
         <div id="chart-line"></div>
@@ -59,7 +73,9 @@
         <script type="text/javascript" src="lib/crossfilter/crossfilter.js"></script>
         <script type="text/javascript" src="lib/dc/dc.js"></script>
         <script type="text/javascript" src="lib/tableExport.js"></script>
-        <script type="text/javascript" src="charts.js"></script>
-
+        <script type="text/javascript" src="TransactionCharts.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
     </body>
 </html>

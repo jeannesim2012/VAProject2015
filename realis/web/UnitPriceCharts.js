@@ -3,7 +3,8 @@ var unitPriceHistChart = dc.barChart("#chart-hist-unitPrice"),
         volumeChart = dc.barChart('#monthly-volume-chart'),
         propertyRowChart = dc.rowChart("#chart-row-propertyType"),
         nasdaqTable = dc.dataTable(".dc-data-table"),
-        nasdaqCount = dc.dataCount('.dc-data-count');
+        nasdaqCount = dc.dataCount('.dc-data-count'),
+        sunburstChart = dc.sunburstChart("#sunburst");
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
 var dtgFormat2 = d3.time.format("%a %e %b");
@@ -26,6 +27,10 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
         return d3.time.day(d.date);
     });
 
+    //for sunburst
+    runDimension  = transaction.dimension(function(d) {return [d.planningRegion, d.planningArea, d.postalDistrict];});
+    speedSumGroup = runDimension.group().reduceSum(function(d) {return d.unitPricePSM;});
+
     unitPricePSMDim = transaction.dimension(function (d) {
         return (d.unitPricePSM);
     });
@@ -33,7 +38,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     unitPriceHist = unitPricePSMDim.group().reduceCount(function (d) {
         return d.unitPricePSM;
     });
-
+    
     propertyType = transaction.dimension(function (d) {
         return d.propertyType;
     });
@@ -43,17 +48,26 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     });
 
     logTransactionPriceByMonthGroup = date.group().reduceSum(function (d) {
-        return +Math.log(d.transactedPrice);
+        return +Math.log(d.unitPricePSM);
     });
 
     apartmentValues = date.group().reduceSum(function (d) {
-        if (d.transactedPrice > 0) {
-            return +d.transactedPrice;
+        if (d.unitPricePSM > 0) {
+            return +d.unitPricePSM;
         } else {
             return 0;
         }
     });
-
+    
+    sunburstChart
+        .width(1000)
+        .height(480)
+        .innerRadius(100)
+        .dimension(runDimension)
+        .group(speedSumGroup)
+        //.ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
+        .legend(dc.legend());
+    
     propertyRowChart
             .width(500).height(200)
             .dimension(propertyType)
@@ -65,9 +79,14 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .height(200)
             .dimension(unitPricePSMDim)
             .group(unitPriceHist)
+            .rangeChart(volumeChart)
+            .elasticY(true)
+            .renderHorizontalGridLines(true)
             .gap(1)
-            .x(d3.scale.linear().domain([1500, 40000]))
-            .elasticY(true);
+            .x(d3.scale.linear().domain([1371,49791]))
+            .elasticY(true)
+            .yAxisLabel("Number of Units")
+            .xAxisLabel("Price");
 
     priceLineChart
             .renderArea(true)
@@ -78,7 +97,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .dimension(date)
             .mouseZoomable(true)
             .rangeChart(volumeChart)
-            .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 12, 31)]))
+            .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 11, 30)]))
             .round(d3.time.day.round)
             .xUnits(d3.time.days)
             .elasticY(true)
@@ -90,9 +109,9 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             })
             .title(function (d) {
                 return dtgFormat2(d.key)
-                        + "\nTransaction Price: $" + d.value;
+                        + "\nPrice: $" + d.value;
             })
-            .yAxisLabel("Transacted Price");
+            .yAxisLabel("Price");
 
     volumeChart.width(990)
             .height(40)
@@ -101,7 +120,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .group(logTransactionPriceByMonthGroup)
             .centerBar(true)
             .gap(0.5)
-            .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 12, 31)]))
+            .x(d3.time.scale().domain([new Date(2014, 0, 1), new Date(2014, 11, 30)]))
             .round(d3.time.day.round)
             .alwaysUseRounding(true)
             .xUnits(d3.time.days);
@@ -129,7 +148,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .group(function (d) {
                 return "";
             })
-            .size(10)
+            .size(transaction.size())
             .columns([
                 function (d) {
                     return  d.projectName;

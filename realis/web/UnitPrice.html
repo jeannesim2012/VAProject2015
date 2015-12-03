@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>IS428 Visual Analytics Project on REALIS 2014 data</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        
+        <style>
+            #monthly-volume-chart g.y {
+                display: none;
+            }
+
+            #chart-row-propertyType g.row text {
+                fill: black;
+            }
+            
+            #sunburst g.dc-legend {
+                display: none;
+            }
+            
+            .dc-chart .pie-slice {
+                fill: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="sunburst"></div>
+        <div id="chart-hist-unitPrice"></div>
+        <div id="chart-row-propertyType"></div>
+        <div id="chart-line"></div>
+        <div id="monthly-volume-chart"></div>
+
+        <div class='container' style='font: 12px sans-serif;'>
+            <div class='row'>
+                <div class='span12'>
+                    <div>
+                        <div class="dc-data-count">
+                            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+                        </div>
+                    </div>
+                    <input type="button" onclick="tableToExcel('data-table', 'W3C Example Table')" value="Export to Excel">
+                    <table class='table table-hover dc-data-table' id='data-table'>
+                        <thead>
+                            <tr class='header'>
+                                <th>Project Name</th>
+                                <th>Address</th>
+                                <th>Area</th>
+                                <th>Type Of Area</th>
+                                <th>Transacted Price ($)</th>
+                                <th>Unit Price/PSM ($)</th>
+                                <th>Unit Price/PSF ($)</th>
+                                <th>Sale Date</th>
+                                <th>Property Type</th>
+                                <th>Tenure</th>
+                                <th>Postal District</th>
+                                <th>Postal Code</th>
+                                <th>Planning Region</th>
+                                <th>Planning Area</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="lib/d3/d3.js"></script>
+        <script type="text/javascript" src="lib/crossfilter/crossfilter.js"></script>
+        <script type="text/javascript" src="lib/dc/dc.js"></script>
+        <script type="text/javascript" src="lib/tableExport.js"></script>
+        <script type="text/javascript" src="UnitPriceCharts.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
+        <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
+    </body>
+</html>
