@@ -60,22 +60,22 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     });
     
     sunburstChart
-        .width(1000)
+        .width(550)
         .height(480)
-        .innerRadius(100)
+        .innerRadius(50)
         .dimension(runDimension)
         .group(speedSumGroup)
         //.ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
         .legend(dc.legend());
     
     propertyRowChart
-            .width(500).height(200)
+            .width(500).height(480)
             .dimension(propertyType)
             .group(unitSoldPerPropertyType)
             .elasticX(true);
 
     unitPriceHistChart
-            .width(400)
+            .width(1170)
             .height(200)
             .dimension(transactionPrice)
             .group(transPriceHist)
@@ -90,7 +90,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
 
     priceLineChart
             .renderArea(true)
-            .width(990)
+            .width(1170)
             .height(200)
             .transitionDuration(1000)
             .margins({top: 30, right: 50, bottom: 25, left: 75})
@@ -113,7 +113,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             })
             .yAxisLabel("Price");
 
-    volumeChart.width(990)
+    volumeChart.width(1170)
             .height(40)
             .margins({top: 0, right: 50, bottom: 20, left: 85})
             .dimension(date)

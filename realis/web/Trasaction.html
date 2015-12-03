@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="css/dc.css"/>
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-        
+
         <style>
             #monthly-volume-chart g.y {
                 display: none;
@@ -18,34 +18,72 @@
             #sunburst g.dc-legend {
                 display: none;
             }
-
+            
+            #sunburst g.transform {
+                transform: scale(275,240);
+            }
+            
             .dc-chart .pie-slice {
                 fill: black;
+            }
+
+            //Nav bar
+            .centered-pills {  
+                text-align: center
+            }
+            .centered-pills ul.nav-pills {
+                display: inline-block
+            }
+            .centered-pills li {
+                display: inline
+            }
+            .centered-pills a {
+                float: center
+            }
+            * html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
+                display: inline
             }
         </style>
     </head>
     <body>
-        <div class="btn-group">
-            <button class="btn">Left</button>
-            <button class="btn">Middle</button>
-            <button class="btn">Right</button>
+        <div class="row">
+            <center><img id="logo" src="image/Icon.png" width=210 height=164></img></center>
         </div>
-        <div id="sunburst"></div>
-        <div id="chart-hist-unitPrice"></div>
-        <div id="chart-row-propertyType"></div>
-        <div id="chart-line"></div>
-        <div id="monthly-volume-chart"></div>
+        <div class="masthead">
+            <ul class="nav nav-pills centered-pills">
+                <li class="active"><a href="#">Transacted Price</a></li>
+                <li><a href="UnitPrice.html">Unit Price (PSM)</a></li>
+            </ul>
+        </div>
+        <hr>
+
+        <div class="dc-data-count">
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        </div>
+        
+        <div class="container">
+            <center><input type="button" onclick="tableToExcel('data-table', 'W3C Example Table')" value="Export to Excel"></center>
+        </div>
+
+        <div class="container">
+            <div id="sunburst"></div>
+            <div id="chart-row-propertyType"></div>
+        </div>
+
+        <div class="container">
+            <div id="chart-hist-unitPrice"></div>
+        </div>
+
+        <div class="container">
+            <div id="chart-line"></div>
+            <div id="monthly-volume-chart"></div>
+        </div>
 
         <div class='container' style='font: 12px sans-serif;'>
             <div class='row'>
                 <div class='span12'>
-                    <div>
-                        <div class="dc-data-count">
-                            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
-                                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
-                        </div>
-                    </div>
-                    <input type="button" onclick="tableToExcel('data-table', 'W3C Example Table')" value="Export to Excel">
+
                     <table class='table table-hover dc-data-table' id='data-table'>
                         <thead>
                             <tr class='header'>
