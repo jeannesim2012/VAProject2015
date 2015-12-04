@@ -22,25 +22,65 @@
             .dc-chart .pie-slice {
                 fill: black;
             }
+            
+            //Nav bar
+            .nav-tabs > li, .nav-pills > li {
+                float:none;
+                display:inline-block;
+                *display:inline; /* ie7 fix */
+                zoom:1; /* hasLayout ie7 trigger */
+            }
+
+            .nav-pills {
+                margin: 0 auto;
+                padding: 0;
+                width: 300px;
+            }
         </style>
     </head>
     <body>
-        <div id="sunburst"></div>
-        <div id="chart-hist-unitPrice"></div>
-        <div id="chart-row-propertyType"></div>
-        <div id="chart-line"></div>
-        <div id="monthly-volume-chart"></div>
+        <div class="row">
+            <center><img id="logo" src="image/Icon.png" width=250 height=204></img></center>
+        </div>
+        <div class="masthead">
+            <ul class="nav nav-pills centered-pills">
+                <li><a href="Transaction.html">Transacted Price</a></li>
+                <li class="active"><a href="#">Unit Price (PSM)</a></li>
+            </ul>
+        </div>
+        <hr>
 
-        <div class='container' style='font: 12px sans-serif;'>
-            <div class='row'>
-                <div class='span12'>
-                    <div>
-                        <div class="dc-data-count">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span6" id="sunburst"></div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span6 dc-data-count" style="padding-left: 30px;">
                             <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
                                 href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
                         </div>
+                        <div class="span6">
+                            <button type="button" class="btn btn-success btn-sm" onclick="tableToExcel('data-table', 'W3C Example Table')">Export to Excel</button>
+                        </div>
                     </div>
-                    <input type="button" onclick="tableToExcel('data-table', 'W3C Example Table')" value="Export to Excel">
+                    <div class="row">
+                        <div class="span6" id="chart-row-propertyType"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="chart-hist-unitPrice"></div>
+        </div>
+
+        <div class="container">
+            <div id="chart-line"></div>
+            <div id="monthly-volume-chart"></div>
+        </div>
+        <div class='container' style='font: 12px sans-serif;'>
+            <div class='row'>
+                <div class='span12'>
                     <table class='table table-hover dc-data-table' id='data-table'>
                         <thead>
                             <tr class='header'>

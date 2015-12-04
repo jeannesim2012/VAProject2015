@@ -69,13 +69,13 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
         .legend(dc.legend());
     
     propertyRowChart
-            .width(550).height(300)
+            .width(650).height(300)
             .dimension(propertyType)
             .group(unitSoldPerPropertyType)
             .elasticX(true);
 
     unitPriceHistChart
-            .width(400)
+            .width(1170)
             .height(200)
             .dimension(unitPricePSMDim)
             .group(unitPriceHist)
@@ -90,7 +90,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
 
     priceLineChart
             .renderArea(true)
-            .width(990)
+            .width(1170)
             .height(200)
             .transitionDuration(1000)
             .margins({top: 30, right: 50, bottom: 25, left: 75})

@@ -179,34 +179,5 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                 table.selectAll('.dc-table-group').classed('info', true);
             });
             
-            update();
     dc.renderAll();
 });
-
-var ofs = 0, pag = 17;
-  function display() {
-      d3.select('#begin')
-          .text(ofs);
-      d3.select('#end')
-          .text(ofs+pag-1);
-      d3.select('#last')
-          .attr('disabled', ofs-pag<0 ? 'true' : null);
-      d3.select('#next')
-          .attr('disabled', ofs+pag>=transaction.size() ? 'true' : null);
-      d3.select('#size').text(transaction.size());
-  }
-  function update() {
-      nasdaqTable.beginSlice(ofs);
-      nasdaqTable.endSlice(ofs+pag);
-      display();
-  }
-  function next() {
-      ofs += pag;
-      update();
-      nasdaqTable.redraw();
-  }
-  function last() {
-      ofs -= pag;
-      update();
-      nasdaqTable.redraw();
-  }
