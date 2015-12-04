@@ -60,16 +60,16 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     });
     
     sunburstChart
-        .width(1000)
-        .height(480)
-        .innerRadius(100)
+        .width(470)
+        .height(400)
+        .innerRadius(50)
         .dimension(runDimension)
         .group(speedSumGroup)
         //.ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
         .legend(dc.legend());
     
     propertyRowChart
-            .width(500).height(200)
+            .width(550).height(300)
             .dimension(propertyType)
             .group(unitSoldPerPropertyType)
             .elasticX(true);
@@ -86,7 +86,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .x(d3.scale.linear().domain([1371,49791]))
             .elasticY(true)
             .yAxisLabel("Number of Units")
-            .xAxisLabel("Price");
+            .xAxisLabel("Unit Price (PSM)");
 
     priceLineChart
             .renderArea(true)
@@ -109,9 +109,9 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             })
             .title(function (d) {
                 return dtgFormat2(d.key)
-                        + "\nPrice: $" + d.value;
+                        + "\nUnit Price (PSM): $" + d.value;
             })
-            .yAxisLabel("Price");
+            .yAxisLabel("Unit Price (PSM)");
 
     volumeChart.width(990)
             .height(40)
@@ -155,15 +155,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                 }, function (d) {
                     return  d.address;
                 }, function (d) {
-                    return  d.area;
-                }, function (d) {
-                    return d.typeOfArea;
-                }, function (d) {
-                    return  "$" + d.transactedPrice;
-                }, function (d) {
                     return  "$" + d.unitPricePSM;
-                }, function (d) {
-                    return  "$" + d.unitPricePSF;
                 }, function (d) {
                     return d.saleDate;
                 }, function (d) {
@@ -172,8 +164,6 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                     return d.tenure;
                 }, function (d) {
                     return d.postalDistrict;
-                }, function (d) {
-                    return d.postalCode;
                 }, function (d) {
                     return d.planningRegion;
                 }, function (d) {

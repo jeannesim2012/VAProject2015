@@ -18,36 +18,33 @@
             #sunburst g.dc-legend {
                 display: none;
             }
-            
+
             #sunburst g.transform {
                 transform: scale(275,240);
             }
-            
+
             .dc-chart .pie-slice {
                 fill: black;
             }
 
             //Nav bar
-            .centered-pills {  
-                text-align: center
+            .nav-tabs > li, .nav-pills > li {
+                float:none;
+                display:inline-block;
+                *display:inline; /* ie7 fix */
+                zoom:1; /* hasLayout ie7 trigger */
             }
-            .centered-pills ul.nav-pills {
-                display: inline-block
-            }
-            .centered-pills li {
-                display: inline
-            }
-            .centered-pills a {
-                float: center
-            }
-            * html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
-                display: inline
+
+            .nav-pills {
+                margin: 0 auto;
+                padding: 0;
+                width: 300px;
             }
         </style>
     </head>
     <body>
         <div class="row">
-            <center><img id="logo" src="image/Icon.png" width=210 height=164></img></center>
+            <center><img id="logo" src="image/Icon.png" width=250 height=204></img></center>
         </div>
         <div class="masthead">
             <ul class="nav nav-pills centered-pills">
@@ -57,18 +54,24 @@
         </div>
         <hr>
 
-        <div class="dc-data-count">
-            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
-                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
-        </div>
-        
         <div class="container">
-            <center><input type="button" onclick="tableToExcel('data-table', 'W3C Example Table')" value="Export to Excel"></center>
-        </div>
-
-        <div class="container">
-            <div id="sunburst"></div>
-            <div id="chart-row-propertyType"></div>
+            <div class="row-fluid">
+                <div class="span6" id="sunburst"></div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span6 dc-data-count" style="padding-left: 30px;">
+                            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+                        </div>
+                        <div class="span6">
+                            <button type="button" class="btn btn-success btn-sm" onclick="tableToExcel('data-table', 'W3C Example Table')">Export to Excel</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span6" id="chart-row-propertyType"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="container">
@@ -83,27 +86,26 @@
         <div class='container' style='font: 12px sans-serif;'>
             <div class='row'>
                 <div class='span12'>
-
                     <table class='table table-hover dc-data-table' id='data-table'>
                         <thead>
                             <tr class='header'>
                                 <th>Project Name</th>
                                 <th>Address</th>
-                                <th>Area</th>
-                                <th>Type Of Area</th>
                                 <th>Transacted Price ($)</th>
-                                <th>Unit Price/PSM ($)</th>
-                                <th>Unit Price/PSF ($)</th>
                                 <th>Sale Date</th>
                                 <th>Property Type</th>
                                 <th>Tenure</th>
                                 <th>Postal District</th>
-                                <th>Postal Code</th>
                                 <th>Planning Region</th>
                                 <th>Planning Area</th>
                             </tr>
                         </thead>
                     </table>
+                    <div id="paging">
+                        Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
+                        <input id="last" type="Button" value="Last" onclick="javascript:last()" />
+                        <input id="next" type="button" value="Next" onclick="javascript:next()"/>
+                    </div>
                 </div>
             </div>
         </div>

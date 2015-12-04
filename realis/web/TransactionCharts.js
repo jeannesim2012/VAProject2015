@@ -8,6 +8,7 @@ var unitPriceHistChart = dc.barChart("#chart-hist-unitPrice"),
 
 var parseDate = d3.time.format("%d-%b-%y").parse;
 var dtgFormat2 = d3.time.format("%a %e %b");
+var transaction;
 
 d3.csv('data/REALIS2014.csv', function (transactions) {
     //Basic Transform
@@ -60,8 +61,8 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
     });
     
     sunburstChart
-        .width(550)
-        .height(480)
+        .width(470)
+        .height(400)
         .innerRadius(50)
         .dimension(runDimension)
         .group(speedSumGroup)
@@ -69,7 +70,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
         .legend(dc.legend());
     
     propertyRowChart
-            .width(500).height(480)
+            .width(650).height(300)
             .dimension(propertyType)
             .group(unitSoldPerPropertyType)
             .elasticX(true);
@@ -86,7 +87,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .x(d3.scale.linear().domain([130000, 40500000]))
             .elasticY(true)
             .yAxisLabel("Number of Units")
-            .xAxisLabel("Price");
+            .xAxisLabel("Transacted Price");
 
     priceLineChart
             .renderArea(true)
@@ -109,9 +110,9 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             })
             .title(function (d) {
                 return dtgFormat2(d.key)
-                        + "\nPrice: $" + d.value;
+                        + "\nTransacted Price: $" + d.value;
             })
-            .yAxisLabel("Price");
+            .yAxisLabel("Transacted Price");
 
     volumeChart.width(1170)
             .height(40)
@@ -155,15 +156,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                 }, function (d) {
                     return  d.address;
                 }, function (d) {
-                    return  d.area;
-                }, function (d) {
-                    return d.typeOfArea;
-                }, function (d) {
                     return  "$" + d.transactedPrice;
-                }, function (d) {
-                    return  "$" + d.unitPricePSM;
-                }, function (d) {
-                    return  "$" + d.unitPricePSF;
                 }, function (d) {
                     return d.saleDate;
                 }, function (d) {
@@ -172,8 +165,6 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
                     return d.tenure;
                 }, function (d) {
                     return d.postalDistrict;
-                }, function (d) {
-                    return d.postalCode;
                 }, function (d) {
                     return d.planningRegion;
                 }, function (d) {
@@ -187,5 +178,35 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             .on('renderlet', function (table) {
                 table.selectAll('.dc-table-group').classed('info', true);
             });
+            
+            update();
     dc.renderAll();
 });
+
+var ofs = 0, pag = 17;
+  function display() {
+      d3.select('#begin')
+          .text(ofs);
+      d3.select('#end')
+          .text(ofs+pag-1);
+      d3.select('#last')
+          .attr('disabled', ofs-pag<0 ? 'true' : null);
+      d3.select('#next')
+          .attr('disabled', ofs+pag>=transaction.size() ? 'true' : null);
+      d3.select('#size').text(transaction.size());
+  }
+  function update() {
+      nasdaqTable.beginSlice(ofs);
+      nasdaqTable.endSlice(ofs+pag);
+      display();
+  }
+  function next() {
+      ofs += pag;
+      update();
+      nasdaqTable.redraw();
+  }
+  function last() {
+      ofs -= pag;
+      update();
+      nasdaqTable.redraw();
+  }
