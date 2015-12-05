@@ -113,7 +113,7 @@ d3.csv('data/REALIS2014.csv', function (transactions) {
             })
             .yAxisLabel("Unit Price (PSM)");
 
-    volumeChart.width(990)
+    volumeChart.width(1170)
             .height(40)
             .margins({top: 0, right: 50, bottom: 20, left: 85})
             .dimension(date)
